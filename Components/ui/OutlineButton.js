@@ -1,6 +1,7 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/Colors";
+import {loc} from "expo-location"
 
 export default function OutlineButton({
   children,

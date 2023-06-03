@@ -1,4 +1,4 @@
-const GOOGLE_API_KEY = "AIzaSyAag-HOpOyYnN-zrYHxLFlKhqfi76_gm7w";
+const GOOGLE_API_KEY = "AIzaSyBtX_LOXWwl_PBvrTu40H1Q_tlqk-zjwSQ";
 
 export function getMapPreview(lat, long) {
   const imagePreviewURL =
@@ -13,4 +13,22 @@ export function getMapPreview(lat, long) {
     "&key=" +
     GOOGLE_API_KEY;
   return imagePreviewURL;
+}
+
+export async function getAddress(lat, long) {
+  const url =
+    "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+    lat +
+    "," +
+    long +
+    "&key=" +
+    GOOGLE_API_KEY;
+  console.log(url);
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch the address!");
+  }
+  const data = await response.json();
+  return data.results[0].formatted_address;
 }
