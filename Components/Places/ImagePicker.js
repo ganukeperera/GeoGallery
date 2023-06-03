@@ -8,7 +8,7 @@ import {
 import { useState } from "react";
 import { Colors } from "../../constants/Colors";
 
-export default function ImagePicker() {
+export default function ImagePicker({ onImagePicked }) {
   const [cameraPermissionInfo, requestPermission] = useCameraPermissions();
   const [imageUri, setImageUri] = useState();
   async function veryfyPermission() {
@@ -39,6 +39,7 @@ export default function ImagePicker() {
       quality: 0.5,
     });
     setImageUri(image.assets[0].uri);
+    onImagePicked(image.assets[0].uri);
   }
   let imageContent = <Text style={styles.text}>No Image Available</Text>;
   if (imageUri) {

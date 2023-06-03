@@ -14,21 +14,30 @@ import {
   useRoute,
   useIsFocused,
 } from "@react-navigation/native";
+import { getAddress } from "../../util/location";
 
-export default function LocationPicker() {
+export default function LocationPicker({ onLocationPicked }) {
   const [location, setLocation] = useState();
   const [locationInfo, requestPermission] = useForegroundPermissions();
   const navigation = useNavigation();
   const route = useRoute();
-  const isFocussed = useIsFocused;
 
   useEffect(() => {
-    if (isFocussed && route.params) {
+    if (route.params) {
       const mapPickedLocation = route.params.selectedLocation;
-      console.log("psrsms  " + mapPickedLocation.toString);
       setLocation(mapPickedLocation);
     }
-  }, [isFocussed, route]);
+  }, [route]);
+
+  useEffect(() => {
+    async function addressHandler() {
+      if (location) {
+        const address = await getAddress(location.lat, location.long);
+        onLocationPicked({ ...location, address: address });
+      }
+    }
+    addressHandler();
+  }, [location, onLocationPicked]);
 
   async function veryfyPermission() {
     if (locationInfo.status === PermissionStatus.UNDETERMINED) {
@@ -51,10 +60,11 @@ export default function LocationPicker() {
       return;
     }
     const location = await getCurrentPositionAsync();
-    setLocation({
+    const loc = {
       lat: location.coords.latitude,
       long: location.coords.longitude,
-    });
+    };
+    setLocation(loc);
   }
   function pickLocationFromHandler() {
     navigation.navigate("MapView");
